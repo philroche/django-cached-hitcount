@@ -43,4 +43,7 @@ Or, you could do a PIP installation:
 
 
 
+Copyright:
+-------------
 
+This package is © 2014 Philip Roche, released under the terms of the GNU GPL v3 (or at your option a later version).
