@@ -23,6 +23,10 @@ setup(
     install_requires=[
         'Django>=1.4',
         'python-memcached-stats',#git+git://github.com/dlrust/python-memcached-stats.git
+        'nexus',
+        'django-jsonfield',
+        'billiard',
+        'python-dateutil',
         'gargoyle',
         'django-celery',
         'python-memcached',

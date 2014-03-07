@@ -30,7 +30,7 @@ def _update_hit_count(request, object_pk, ctype_pk):
 
     cache_key = "hitcount__%s__%s" % (ctype_pk, object_pk)
     try:
-        count = hitcount_cache.incr(cache_key)
+        hitcount_cache.incr(cache_key)
         return True
     except ValueError:#cache might have timed out
         count = 1

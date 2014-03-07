@@ -1,0 +1,2 @@
+include README.md
+recursive-include cached_hitcount/templates *
