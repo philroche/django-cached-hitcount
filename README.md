@@ -41,7 +41,9 @@ Or, you could do a PIP installation:
 
     pip install -e git://github.com/philroche/django-cached-hitcount.git#egg=django-cached-hitcount
 
+Or using PyPi
 
+    pip install django-cached-hitcount
 
 Copyright:
 -------------
