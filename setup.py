@@ -14,10 +14,10 @@ setup(
     version = __version__,
     author = "Philip Roche",
     author_email = "phil@philroche,net",
-    description = ("Django hit counter application that tracks the number of hits/views for chosen objects"),
+    description = ("Basic app that allows you to track the number of hits/views for a particular object."),
     license = "GPLv3",
-    keywords = "django health check monitoring",
-    url = "https://github.com/KristianOellegaard/django-health-check",
+    keywords = "django hti count",
+    url = "https://github.com/philroche/django-cached-hitcount",
     packages=find_packages(),
     long_description=read('README.md'),
     install_requires=[

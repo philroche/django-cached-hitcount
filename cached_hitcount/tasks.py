@@ -33,19 +33,16 @@ def persist_hits():
 
                 #save a new hit or increment this hits on an existing hit
                 hit, created = Hit.objects.select_for_update().get_or_create(added=datetime.utcnow().date(), object_pk=object_pk, content_type=content_type)
-                if created:
+                if hit and created:
                     hit.hits = count
-                else:
+                    hit.save()
+                elif hit:
                     hit.hits = hit.hits + count
-                hit.save()
+                    hit.save()
 
                 #reset the hitcount for this object to 0
                 hitcount_cache.set(cache_key, 0, CACHED_HITCOUNT_CACHE_TIMEOUT)
-                print hitcount
-                print object_pk
-                print ctype_pk
-                print cache_key
-                print count
+
 
 
 
