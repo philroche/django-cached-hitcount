@@ -6,6 +6,10 @@ object.
 
 All hits are stored in memcache until persisted to database.
 
+As the hits are stored in cache there are no DB queries/inserts/updates on each request.
+
+Adding hits is done via an ajax call so that app can still be used on cached views.
+
 You can persist the hits to DB using celery and the `persist_hits` periodic task or use the `persist_hits` management command.
 
     python manage.py persist_hits
