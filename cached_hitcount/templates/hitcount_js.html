@@ -1,7 +1,7 @@
 <script type="text/javascript">
     /* <![CDATA[ */
         $(document).ready(function(){
-        $.post( '/hits/',{ object_pk : '{{ object_pk }}', ctype_pk :  '{{ ctype_pk }}', csrfmiddlewaretoken: '{{ csrf_token }}'},'json');
+        $.post( '{{ url }}',{ object_pk : '{{ object_pk }}', ctype_pk :  '{{ ctype_pk }}', csrfmiddlewaretoken: '{{ csrf_token }}'},'json');
         });
     /* ]]> */
 </script>

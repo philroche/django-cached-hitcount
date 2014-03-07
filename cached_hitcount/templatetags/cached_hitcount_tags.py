@@ -1,4 +1,5 @@
 from django import template
+from django.core.urlresolvers import reverse
 
 from cached_hitcount.utils import get_target_ctype_pk, get_hit_count as get_hit_count_utils
 
@@ -38,10 +39,12 @@ def get_hit_count_javascript_template(context, object, **kwargs):
     {% get_hit_count_javascript_template [object] %}
 
     '''
+    url = reverse('update_hit_count_ajax')
     ctype, object_pk = get_target_ctype_pk(object)
     csrf_token = unicode(context['csrf_token'])
     return {
         'ctype_pk': ctype.pk,
         'object_pk': object_pk,
         'csrf_token': csrf_token,
+        'url' : url,
     }
