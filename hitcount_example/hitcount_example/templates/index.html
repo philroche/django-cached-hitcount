@@ -1,0 +1,14 @@
+{% load hitcount_tags i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hit Count Example</title>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js" ></script>
+</head>
+<body>
+<p>{% trans 'Object' %}  - {{ example_model.label }}</p>
+<p>{% trans 'Number of time this object has been viewed' %}: {% get_hit_count example_model %}</p>
+<p>{% trans 'Number of time this object has been viewed in the last day' %}: {% get_hit_count example_model within="days=1" %}</p>
+{% get_hit_count_javascript_template example_model %}
+</body>
+</html>

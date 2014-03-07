@@ -1,0 +1,6 @@
+Django>=1.4
+git+git://github.com/dlrust/python-memcached-stats.git
+gargoyle
+django-celery
+python-memcached
+south
