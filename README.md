@@ -14,18 +14,18 @@ You can persist the hits to DB using celery and the `persist_hits` periodic task
 
     python manage.py persist_hits
 
-hitcount_example app shows how to use app, by using 'get_hit_count_javascript_template' and 'get_hit_count' template tags.
+hitcount_example app shows how to use app, by using `get_hit_count_javascript_template` and `get_hit_count` template tags.
 
 Available settings are:
 
-* HITCOUNT_CACHE -The CACHES settings dict key to use for caching hits (default is 'cached_hitcount')
-* HITCOUNT_CACHE_TIMEOUT - How long in seconds should the hits be cached for before persisted  (default is '600')
-* HITCOUNT_IP_CACHE_TIMEOUT - How long in seconds should the black list ip addresses be cached for  (default is '86400' seconds = 1 day)
-* HITCOUNT_PERSIST_SCHEDULE - How often should the hits be persisted  (default is '15' minutes)
-* HITCOUNT_IP_CACHE - key name to use for caching the blacklist ip addresses  (default is 'hitcount__blacklistip')
+* HITCOUNT_CACHE -The CACHES setting dict key to use for caching hits (default is `cached_hitcount`)
+* HITCOUNT_CACHE_TIMEOUT - How long in seconds should the hits be cached for before persisted  (default is `600`)
+* HITCOUNT_IP_CACHE_TIMEOUT - How long in seconds should the black list ip addresses be cached for  (default is `86400` seconds = 1 day)
+* HITCOUNT_PERSIST_SCHEDULE - How often should the hits be persisted  (default is `15` minutes)
+* HITCOUNT_IP_CACHE - key name to use for caching the blacklist ip addresses  (default is `hitcount__blacklistip`)
 * HITCOUNT_EXCLUDE_IP_ADDRESS - Wheter or not you want to exclude some ip addresses  (default is True)
 
-Also a gargoyle switch 'cached_hitcount' to switch on/off all hit counting (default is True)
+Also a gargoyle switch `cached_hitcount` to switch on/off all hit counting (default is True)
 
 This app was very much inspired by <http://damontimm.com/code/django-hitcount/>
 
