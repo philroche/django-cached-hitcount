@@ -23,7 +23,7 @@ class Hit(models.Model):
     '''
 
     hits = models.PositiveIntegerField(default=0)
-    added        = models.DateField(default=datetime.datetime.utcnow().date())
+    added        = models.DateField(default=datetime.datetime.utcnow().date(), db_index=True)
     content_type    = models.ForeignKey(ContentType,
                         verbose_name="content type",
                         related_name="content_type_set_for_%(class)s", db_index=True)
