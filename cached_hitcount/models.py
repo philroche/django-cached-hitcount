@@ -11,9 +11,6 @@ from cached_hitcount.settings import CACHED_HITCOUNT_IP_CACHE_TIMEOUT, CACHED_HI
 from cached_hitcount.utils import get_hitcount_cache
 # SIGNALS #
 #TODO model to create an initial entry in DB for object and also set initial value (0) in memcache
-#TODO - check to see if gargoyle switch is enabled
-
-
 
 # MODELS #
 class Hit(models.Model):
