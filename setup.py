@@ -16,21 +16,24 @@ setup(
     author_email = "phil@philroche,net",
     description = ("Basic app that allows you to track the number of hits/views for a particular object."),
     license = "GPLv3",
-    keywords = "django hti count",
+    keywords = "django hit count",
     url = "https://github.com/philroche/django-cached-hitcount",
     packages=find_packages(),
     long_description=read('README.md'),
     install_requires=[
-        'Django>=1.4',
-        'python-memcached-stats',#git+git://github.com/dlrust/python-memcached-stats.git
+        'Django>=1.4,<1.6',
+        'python-memcached-stats==0.1',#git+git://github.com/dlrust/python-memcached-stats.git
         'nexus',
-        'django-jsonfield',
+        'django-jsonfield<0.9.4',
         'billiard',
         'python-dateutil',
         'gargoyle',
         'django-celery',
         'python-memcached',
         'south'
+    ],
+    dependency_links=[
+        "https://github.com/dlrust/python-memcached-stats/tarball/master#egg=python-memcached-stats-0.1"
     ],
     include_package_data=True,
     zip_safe = False,

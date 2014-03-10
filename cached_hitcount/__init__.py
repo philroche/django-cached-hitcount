@@ -1,8 +1,8 @@
 # This file is heavily inspired from the django admin autodiscover
 __version_info__ = {
     'major': 0,
-    'minor': 0,
-    'micro': 9,
+    'minor': 1,
+    'micro': 5,
     'releaselevel': 'final',
     'serial': 0
 }
