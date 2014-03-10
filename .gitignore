@@ -1,3 +1,4 @@
 /django_cached_hitcount.egg-info/
 /.idea/
 /dist/
+*.pyc
