@@ -1,5 +1,8 @@
 Django>=1.4
 git+git://github.com/dlrust/python-memcached-stats.git
+nexus
+django-jsonfield
+python-dateutil
 gargoyle
 django-celery
 python-memcached
