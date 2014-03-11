@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 @periodic_task(run_every=timedelta(minutes=5))
 def persist_hits():
     if CACHED_HITCOUNT_ENABLED:
-        #TODO - add a try except around this n case it can't connect
+
         backend, location, params = parse_backend_conf(CACHED_HITCOUNT_CACHE)
         host, port = location.split(':')
         try:
@@ -25,7 +25,7 @@ def persist_hits():
             content_types = {}#used for keeping track of the content types so DB doesn't have to be queried each time
             for cache_key in keys:
                 if "hitcount__" in cache_key and not CACHED_HITCOUNT_IP_CACHE in cache_key:
-                    cache_key = cache_key.split(':')[-1]#TODO why do we have to do this?
+                    cache_key = cache_key.split(':')[-1]#the key is a combination of key_prefix, version and key all separated by : - all we need is the key
                     count = hitcount_cache.get(cache_key)
                     hitcount, ctype_pk, object_pk  = cache_key.split('__')
 

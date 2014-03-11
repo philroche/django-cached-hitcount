@@ -8,9 +8,19 @@ from django.contrib.contenttypes import generic
 from django.dispatch import Signal
 
 from cached_hitcount.settings import CACHED_HITCOUNT_IP_CACHE_TIMEOUT, CACHED_HITCOUNT_IP_CACHE
-from cached_hitcount.utils import get_hitcount_cache
+from cached_hitcount.utils import get_hitcount_cache, get_target_ctype_pk
 # SIGNALS #
-#TODO model to create an initial entry in DB for object and also set initial value (0) in memcache
+def process_object_saved(sender, **kwargs):
+    """ Called when an object is saved. It will create an initial Hit entry with 0 hits """
+
+    object = kwargs['instance']
+    created = kwargs['created']
+
+    if created:
+        ctype, object_pk = get_target_ctype_pk(object)
+        Hit.objects.select_for_update().get_or_create(added=datetime.datetime.utcnow().date(), object_pk=object_pk, content_type=ctype)
+        from cached_hitcount.views import _update_hit_count#prevent circular import
+        _update_hit_count(None,object_pk, ctype.pk)
 
 # MODELS #
 class Hit(models.Model):

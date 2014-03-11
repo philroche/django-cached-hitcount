@@ -19,11 +19,12 @@ def _update_hit_count(request, object_pk, ctype_pk):
 
     Returns True if the request was considered a Hit; returns False if not.
     '''
-    ip = get_ip(request)
+    if request:#we might be calling this form a signal
+        ip = get_ip(request)
 
-    # first, check our request against the blacklists before continuing
-    if CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS and ip in BlacklistIP.objects.get_cache():
-        return False
+        # first, check our request against the blacklists before continuing
+        if CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS and ip in BlacklistIP.objects.get_cache():
+            return False
 
     #save to memcache
     hitcount_cache = get_hitcount_cache()
@@ -37,7 +38,7 @@ def _update_hit_count(request, object_pk, ctype_pk):
         hitcount_cache.set(cache_key, count, CACHED_HITCOUNT_CACHE_TIMEOUT)
         return True
 
-    return False 
+    return False
 
 def json_error_response(error_message):
     return HttpResponse(json.dumps(dict(success=False,
