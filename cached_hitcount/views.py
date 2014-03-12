@@ -5,9 +5,9 @@ from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
-from cached_hitcount.utils import get_ip, get_hitcount_cache
+from cached_hitcount.utils import get_ip, get_hitcount_cache, is_cached_hitcount_enabled
 from cached_hitcount.models import BlacklistIP
-from cached_hitcount.settings import CACHED_HITCOUNT_ENABLED, CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS
+from cached_hitcount.settings import CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS
 
 def _update_hit_count(request, object_pk, ctype_pk):
     '''
@@ -56,7 +56,7 @@ def update_hit_count_ajax(request):
     '''
 
     # make sure this is an ajax request
-    if not CACHED_HITCOUNT_ENABLED or not request.is_ajax():
+    if not is_cached_hitcount_enabled or not request.is_ajax():
         raise Http404()
 
     if request.method == "GET":

@@ -1,15 +1,18 @@
 from datetime import datetime, timedelta
 import re
+import gargoyle
 
 from django.core.cache import cache, get_cache
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Q, Sum
-from cached_hitcount.settings import CACHED_HITCOUNT_CACHE
+from django.db.models import Sum
+from cached_hitcount.settings import CACHED_HITCOUNT_CACHE, CACHED_HITCOUNT_ENABLED
 
 
 # this is not intended to be an all-knowing IP address regex
 IP_RE = re.compile('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
 
+def is_cached_hitcount_enabled():
+    return gargoyle.is_active('cached_hitcount', default=True) and CACHED_HITCOUNT_ENABLED
 
 def get_target_ctype_pk(obj):
     return ContentType.objects.get_for_model(obj), obj.pk

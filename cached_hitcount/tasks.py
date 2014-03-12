@@ -6,15 +6,15 @@ import logging
 from django.core.cache import parse_backend_conf
 from django.contrib.contenttypes.models import ContentType
 
-from cached_hitcount.utils import get_hitcount_cache
-from cached_hitcount.settings import CACHED_HITCOUNT_ENABLED, CACHED_HITCOUNT_CACHE, CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_IP_CACHE
+from cached_hitcount.utils import get_hitcount_cache, is_cached_hitcount_enabled
+from cached_hitcount.settings import CACHED_HITCOUNT_CACHE, CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_IP_CACHE
 from cached_hitcount.models import Hit
 
 logger = logging.getLogger(__name__)
 
 @periodic_task(run_every=timedelta(minutes=5))
 def persist_hits():
-    if CACHED_HITCOUNT_ENABLED:
+    if is_cached_hitcount_enabled:
 
         backend, location, params = parse_backend_conf(CACHED_HITCOUNT_CACHE)
         host, port = location.split(':')
