@@ -30,7 +30,10 @@ setup(
         'gargoyle',
         'django-celery',
         'python-memcached',
-        'south'
+        'south',
+        'pyyaml',
+        'ua-parser',
+        'user-agents'
     ],
     dependency_links=[
         "https://github.com/dlrust/python-memcached-stats/tarball/master#egg=python-memcached-stats-0.1"
