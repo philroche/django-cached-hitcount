@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 import re
-import gargoyle
+from gargoyle import gargoyle
 
 from django.core.cache import cache, get_cache
 from django.contrib.contenttypes.models import ContentType
