@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import re
 from gargoyle import gargoyle
+from user_agents import parse
 
 from django.core.cache import cache, get_cache
 from django.contrib.contenttypes.models import ContentType
@@ -17,6 +18,11 @@ def is_cached_hitcount_enabled():
 def get_target_ctype_pk(obj):
     return ContentType.objects.get_for_model(obj), obj.pk
 
+def is_bot_request(request):
+    ua_string=request.META.get('HTTP_USER_AGENT','')
+    user_agent = parse(ua_string)
+    #use https://pypi.python.org/pypi/user-agents/ to check to see if is a bot
+    return user_agent.is_bot
 
 def return_period_from_string(arg):
     '''

@@ -9,3 +9,4 @@ CACHED_HITCOUNT_IP_CACHE_TIMEOUT = getattr(settings, 'HITCOUNT_IP_CACHE_TIMEOUT'
 CACHED_HITCOUNT_PERSIST_SCHEDULE = getattr(settings, 'HITCOUNT_PERSIST_SCHEDULE', 15 )#minutes # How often should the hits be persisted
 CACHED_HITCOUNT_IP_CACHE = getattr(settings, 'HITCOUNT_IP_CACHE', 'hitcount__blacklistip')#key name to use for caching the blacklist ip addresses
 CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS = getattr(settings, 'HITCOUNT_EXCLUDE_IP_ADDRESS', True)#Wheter or not you want to exclude some ip addresses
+CACHED_HITCOUNT_EXCLUDE_BOTS = getattr(settings, 'HITCOUNT_EXCLUDE_BOTS', True)#Whether or not you exclude bots

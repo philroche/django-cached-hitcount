@@ -5,9 +5,9 @@ from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
-from cached_hitcount.utils import get_ip, get_hitcount_cache, is_cached_hitcount_enabled
+from cached_hitcount.utils import get_ip, get_hitcount_cache, is_cached_hitcount_enabled, is_bot_request
 from cached_hitcount.models import BlacklistIP
-from cached_hitcount.settings import CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS
+from cached_hitcount.settings import CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS, CACHED_HITCOUNT_EXCLUDE_BOTS
 
 def _update_hit_count(request, object_pk, ctype_pk):
     '''
@@ -24,6 +24,10 @@ def _update_hit_count(request, object_pk, ctype_pk):
 
         # first, check our request against the blacklists before continuing
         if CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS and ip in BlacklistIP.objects.get_cache():
+            return False
+
+        #are we excluding bots and is this a bot
+        if CACHED_HITCOUNT_EXCLUDE_BOTS and is_bot_request(request):
             return False
 
     #save to memcache

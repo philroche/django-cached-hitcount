@@ -7,3 +7,6 @@ gargoyle
 django-celery
 python-memcached
 south
+pyyaml
+ua-parser
+user-agents
