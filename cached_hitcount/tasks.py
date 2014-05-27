@@ -49,6 +49,7 @@ def persist_hits():
 
                     #reset the hitcount for this object to 0
                     hitcount_cache.set(cache_key, 0, CACHED_HITCOUNT_CACHE_TIMEOUT)
+                    #print  'reset key %s to zero = %s ' % (cache_key, hitcount_cache.get(cache_key))
         except Exception, ex:
             logger.error('Unable to persist hits')
             logger.error(ex)
