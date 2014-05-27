@@ -6,8 +6,8 @@ import logging
 from django.core.cache import parse_backend_conf
 from django.contrib.contenttypes.models import ContentType
 
-from cached_hitcount.utils import get_hitcount_cache, is_cached_hitcount_enabled
-from cached_hitcount.settings import CACHED_HITCOUNT_CACHE, CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_IP_CACHE
+from cached_hitcount.utils import get_hitcount_cache, is_cached_hitcount_enabled, release_lock
+from cached_hitcount.settings import CACHED_HITCOUNT_CACHE, CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_IP_CACHE, CACHED_HITCOUNT_LOCK_KEY
 from cached_hitcount.models import Hit
 
 logger = logging.getLogger(__name__)
@@ -18,17 +18,20 @@ def persist_hits():
 
         backend, location, params = parse_backend_conf(CACHED_HITCOUNT_CACHE)
         host, port = location.split(':')
+        hitcount_cache = get_hitcount_cache()
         try:
+            #acquire a lock so no updates will occur while we are persisting the hits to DB
+            hitcount_cache.set(CACHED_HITCOUNT_LOCK_KEY, 1, CACHED_HITCOUNT_CACHE_TIMEOUT)
+            #print  'acquire %s lock = %s ' % (CACHED_HITCOUNT_LOCK_KEY, hitcount_cache.get(CACHED_HITCOUNT_LOCK_KEY))
             mem = MemcachedStats(host, port)
             keys = mem.keys()
-            hitcount_cache = get_hitcount_cache()
+
             content_types = {}#used for keeping track of the content types so DB doesn't have to be queried each time
             for cache_key in keys:
                 if "hitcount__" in cache_key and not CACHED_HITCOUNT_IP_CACHE in cache_key:
                     cache_key = cache_key.split(':')[-1]#the key is a combination of key_prefix, version and key all separated by : - all we need is the key
                     count = hitcount_cache.get(cache_key)
                     hitcount, ctype_pk, object_pk  = cache_key.split('__')
-
                     if ctype_pk in content_types.keys():
                         content_type = content_types[ctype_pk]
                     else:
@@ -50,6 +53,8 @@ def persist_hits():
             logger.error('Unable to persist hits')
             logger.error(ex)
             raise ex
+        finally:
+            release_lock()
 
 
 

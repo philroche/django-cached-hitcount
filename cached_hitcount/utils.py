@@ -6,8 +6,7 @@ from user_agents import parse
 from django.core.cache import cache, get_cache
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Sum
-from cached_hitcount.settings import CACHED_HITCOUNT_CACHE, CACHED_HITCOUNT_ENABLED
-
+from cached_hitcount.settings import CACHED_HITCOUNT_CACHE, CACHED_HITCOUNT_ENABLED, CACHED_HITCOUNT_LOCK_KEY
 
 # this is not intended to be an all-knowing IP address regex
 IP_RE = re.compile('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
@@ -119,3 +118,10 @@ def get_hitcount_cache():
             # Use the default cache
             hitcount_cache = cache
     return hitcount_cache
+
+def release_lock():
+    hitcount_cache = get_hitcount_cache()
+    #release the lock
+    hitcount_cache.delete(CACHED_HITCOUNT_LOCK_KEY)
+    #print  'release %s lock = %s' % (CACHED_HITCOUNT_LOCK_KEY, hitcount_cache.get(CACHED_HITCOUNT_LOCK_KEY))
+

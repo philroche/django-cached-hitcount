@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from cached_hitcount.utils import get_ip, get_hitcount_cache, is_cached_hitcount_enabled, is_bot_request
 from cached_hitcount.models import BlacklistIP
-from cached_hitcount.settings import CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS, CACHED_HITCOUNT_EXCLUDE_BOTS
+from cached_hitcount.settings import CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS, CACHED_HITCOUNT_EXCLUDE_BOTS, CACHED_HITCOUNT_LOCK_KEY
 
 def _update_hit_count(request, object_pk, ctype_pk):
     '''
@@ -34,20 +34,24 @@ def _update_hit_count(request, object_pk, ctype_pk):
     hitcount_cache = get_hitcount_cache()
 
     cache_key = "hitcount__%s__%s" % (ctype_pk, object_pk)
-    try:
-        hitcount_cache.incr(cache_key)
-        return True
-    except ValueError:#cache might have timed out
-        count = 1
-        hitcount_cache.set(cache_key, count, CACHED_HITCOUNT_CACHE_TIMEOUT)
-        return True
+
+    #if the lock is set then do nothing (this means the hits are being persisted to DB)
+    lock = hitcount_cache.get(CACHED_HITCOUNT_LOCK_KEY)
+    #print  'check %s lock = %s' % (CACHED_HITCOUNT_LOCK_KEY, lock)
+    if lock is None or lock != 1:
+        try:
+            hitcount_cache.incr(cache_key)
+            return True
+        except ValueError:#cache might have timed out
+            count = 1
+            hitcount_cache.set(cache_key, count, CACHED_HITCOUNT_CACHE_TIMEOUT)
+            return True
 
     return False
 
 def json_error_response(error_message):
     return HttpResponse(json.dumps(dict(success=False,
                                               error_message=error_message)))
-
 
 def update_hit_count_ajax(request):
     '''

@@ -25,6 +25,7 @@ Available settings are:
 * HITCOUNT_IP_CACHE - key name to use for caching the blacklist ip addresses  (default is `hitcount__blacklistip`)
 * HITCOUNT_EXCLUDE_IP_ADDRESS - Whether or not you want to exclude some ip addresses  (default is True)
 * HITCOUNT_EXCLUDE_BOTS - Whether or not you exclude bots (default is True)
+* HITCOUNT_LOCK_KEY - key name to use for locking when persisting hits to DB
 
 Also a gargoyle switch `cached_hitcount` to switch on/off all hit counting (default is True)
 
