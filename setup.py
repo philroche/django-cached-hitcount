@@ -21,7 +21,7 @@ setup(
     packages=find_packages(),
     long_description=read('README.md'),
     install_requires=[
-        'Django>=1.4,<1.6',
+        'Django>=1.4,<1.7',
         'python-memcached-stats==0.1',#git+git://github.com/dlrust/python-memcached-stats.git
         'nexus',
         'django-jsonfield<0.9.4',

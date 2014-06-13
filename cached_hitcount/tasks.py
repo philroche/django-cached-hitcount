@@ -7,6 +7,11 @@ import logging
 from django.core.cache import parse_backend_conf
 from django.contrib.contenttypes.models import ContentType
 
+try:
+    from django.db.transaction import atomic as transaction_atomic
+except ImportError:
+    from django.db.transaction import commit_on_success as transaction_atomic
+
 from cached_hitcount.utils import get_hitcount_cache, is_cached_hitcount_enabled, release_lock
 from cached_hitcount.settings import CACHED_HITCOUNT_CACHE, CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_IP_CACHE, CACHED_HITCOUNT_LOCK_KEY
 from cached_hitcount.models import Hit
@@ -42,14 +47,15 @@ def persist_hits():
                             content_type = ContentType.objects.get(id=ctype_pk)
                             content_types[ctype_pk] = content_type
 
-                        #save a new hit or increment this hits on an existing hit
-                        hit, created = Hit.objects.select_for_update().get_or_create(added=datetime.utcnow().date(), object_pk=object_pk, content_type=content_type)
-                        if hit and created:
-                            hit.hits = count
-                            hit.save()
-                        elif hit:
-                            hit.hits = hit.hits + count
-                            hit.save()
+                        with transaction_atomic():
+                            #save a new hit or increment this hits on an existing hit
+                            hit, created = Hit.objects.select_for_update().get_or_create(added=datetime.utcnow().date(), object_pk=object_pk, content_type=content_type)
+                            if hit and created:
+                                hit.hits = count
+                                hit.save()
+                            elif hit:
+                                hit.hits = hit.hits + count
+                                hit.save()
 
                         #reset the hitcount for this object to 0
                         hitcount_cache.set(cache_key, 0, CACHED_HITCOUNT_CACHE_TIMEOUT)
