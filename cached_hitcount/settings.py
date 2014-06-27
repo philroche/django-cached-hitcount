@@ -11,3 +11,4 @@ CACHED_HITCOUNT_IP_CACHE = getattr(settings, 'HITCOUNT_IP_CACHE', 'hitcount__bla
 CACHED_HITCOUNT_LOCK_KEY = getattr(settings, 'HITCOUNT_LOCK_KEY', 'hitcountlock')#key name to use for locking when persisting hits to DB
 CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS = getattr(settings, 'HITCOUNT_EXCLUDE_IP_ADDRESS', True)#Wheter or not you want to exclude some ip addresses
 CACHED_HITCOUNT_EXCLUDE_BOTS = getattr(settings, 'HITCOUNT_EXCLUDE_BOTS', True)#Whether or not you exclude bots
+CACHED_HITCOUNT_CSRF_EXEMPT = getattr(settings, 'HITCOUNT_CSRF_EXEMPT', False)#Whether or not ajax view is CSRF exempt by default

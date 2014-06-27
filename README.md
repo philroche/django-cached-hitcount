@@ -26,6 +26,7 @@ Available settings are:
 * HITCOUNT_EXCLUDE_IP_ADDRESS - Whether or not you want to exclude some ip addresses  (default is True)
 * HITCOUNT_EXCLUDE_BOTS - Whether or not you exclude bots (default is True)
 * HITCOUNT_LOCK_KEY - key name to use for locking when persisting hits to DB
+* HITCOUNT_CSRF_EXEMPT - Whether or not ajax view is CSRF exempt by default. Useful if the pages you are using hitcount on are cached. (default is False)
 
 Also a gargoyle switch `cached_hitcount` to switch on/off all hit counting (default is True)
 

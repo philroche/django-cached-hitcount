@@ -63,6 +63,7 @@ def persist_hits():
             except Exception, ex:
                 logger.error('Unable to persist hits')
                 logger.error(ex)
+
                 raise ex
             finally:
                 release_lock()

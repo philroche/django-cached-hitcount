@@ -124,3 +124,5 @@ LOGGING = {
         },
     },
 }
+
+HITCOUNT_CSRF_EXEMPT = False
