@@ -4,6 +4,7 @@ from django.http import Http404, HttpResponse, HttpResponseBadRequest
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.views.decorators.csrf import csrf_exempt
 
 from cached_hitcount.utils import get_ip, get_hitcount_cache, is_cached_hitcount_enabled, is_bot_request
 from cached_hitcount.models import BlacklistIP
@@ -53,6 +54,7 @@ def json_error_response(error_message):
     return HttpResponse(json.dumps(dict(success=False,
                                               error_message=error_message)))
 
+@csrf_exempt
 def update_hit_count_ajax(request):
     '''
     Ajax call that can be used to update a hit count.
