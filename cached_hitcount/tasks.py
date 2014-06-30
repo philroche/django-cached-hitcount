@@ -40,24 +40,25 @@ def persist_hits():
                     if "hitcount__" in cache_key and not CACHED_HITCOUNT_IP_CACHE in cache_key:
                         cache_key = cache_key.split(':')[-1]#the key is a combination of key_prefix, version and key all separated by : - all we need is the key
                         count = hitcount_cache.get(cache_key)
-                        hitcount, ctype_pk, object_pk  = cache_key.split('__')
-                        if ctype_pk in content_types.keys():
-                            content_type = content_types[ctype_pk]
-                        else:
-                            content_type = ContentType.objects.get(id=ctype_pk)
-                            content_types[ctype_pk] = content_type
+                        if count:#only update the hit count if the is not None
+                            hitcount, ctype_pk, object_pk  = cache_key.split('__')
+                            if ctype_pk in content_types.keys():
+                                content_type = content_types[ctype_pk]
+                            else:
+                                content_type = ContentType.objects.get(id=ctype_pk)
+                                content_types[ctype_pk] = content_type
 
-                        with transaction_atomic():
-                            #save a new hit or increment this hits on an existing hit
-                            hit, created = Hit.objects.select_for_update().get_or_create(added=datetime.utcnow().date(), object_pk=object_pk, content_type=content_type)
-                            if hit and created:
-                                hit.hits = count
-                                hit.save()
-                            elif hit:
-                                hit.hits = hit.hits + count
-                                hit.save()
+                            with transaction_atomic():
+                                #save a new hit or increment this hits on an existing hit
+                                hit, created = Hit.objects.select_for_update().get_or_create(added=datetime.utcnow().date(), object_pk=object_pk, content_type=content_type)
+                                if hit and created:
+                                    hit.hits = long(count)
+                                    hit.save()
+                                elif hit:
+                                    hit.hits = hit.hits + long(count)
+                                    hit.save()
 
-                        #reset the hitcount for this object to 0
+                        #reset the hitcount for this object to 0 - even if it was previously None
                         hitcount_cache.set(cache_key, 0, CACHED_HITCOUNT_CACHE_TIMEOUT)
                         #print  'reset key %s to zero = %s ' % (cache_key, hitcount_cache.get(cache_key))
             except Exception, ex:
