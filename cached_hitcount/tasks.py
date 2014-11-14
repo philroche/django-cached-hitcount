@@ -12,7 +12,7 @@ try:
 except ImportError:
     from django.db.transaction import commit_on_success as transaction_atomic
 
-from cached_hitcount.utils import get_hitcount_cache, is_cached_hitcount_enabled, release_lock
+from cached_hitcount.utils import get_hitcount_cache, is_cached_hitcount_enabled, release_lock, using_memcache
 from cached_hitcount.settings import CACHED_HITCOUNT_CACHE, CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_IP_CACHE, CACHED_HITCOUNT_LOCK_KEY
 from cached_hitcount.models import Hit
 
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 @periodic_task(run_every=timedelta(minutes=5))
 def persist_hits():
-    if is_cached_hitcount_enabled:
+    if is_cached_hitcount_enabled() and using_memcache():
 
         backend, location, params = parse_backend_conf(CACHED_HITCOUNT_CACHE)
         host, port = location.split(':')

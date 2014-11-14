@@ -68,7 +68,6 @@ ROOT_URLCONF = 'hitcount_example.urls'
 
 WSGI_APPLICATION = 'hitcount_example.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 

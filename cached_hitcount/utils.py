@@ -2,14 +2,29 @@ from datetime import datetime, timedelta
 import re
 from gargoyle import gargoyle
 from user_agents import parse
-
+from functools import wraps
+from django.conf import settings
 from django.core.cache import cache, get_cache
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Sum
+
+
 from cached_hitcount.settings import CACHED_HITCOUNT_CACHE, CACHED_HITCOUNT_ENABLED, CACHED_HITCOUNT_LOCK_KEY
 
 # this is not intended to be an all-knowing IP address regex
 IP_RE = re.compile('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
+
+USING_MEMCACHE = None#cache whether or not memcache is in use
+
+def using_memcache():
+    global USING_MEMCACHE
+    if USING_MEMCACHE is None:
+        conf = settings.CACHES.get(CACHED_HITCOUNT_CACHE, None)
+        if 'memcached' in conf['BACKEND']:
+            USING_MEMCACHE = True
+        else:
+            USING_MEMCACHE = False
+    return USING_MEMCACHE
 
 def is_cached_hitcount_enabled():
     return gargoyle.is_active('cached_hitcount', default=True) and CACHED_HITCOUNT_ENABLED
