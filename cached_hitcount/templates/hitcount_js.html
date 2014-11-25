@@ -1,7 +1,22 @@
 <script type="text/javascript">
     /* <![CDATA[ */
         $(document).ready(function(){
-        $.post( '{{ url }}',{ object_pk : '{{ object_pk }}', ctype_pk :  '{{ ctype_pk }}', csrfmiddlewaretoken: '{{ csrf_token }}'},'json');
+            $.post( '{{ url }}',
+                    { object_pk : '{{ object_pk }}', ctype_pk :  '{{ ctype_pk }}', csrfmiddlewaretoken: '{{ csrf_token }}'},
+                    {% if client_callbacks %}
+                        function(data, textStatus, jqXHR){
+                            {% for client_callback in client_callbacks %}
+                                try {
+                                    {{ client_callback }}(data);
+                                } catch (e) {
+                                    // {{ client_callback }} was not callable
+                                    //console.log('{{ client_callback }} was not callable');
+                                }
+
+                            {% endfor %}
+                        },
+                    {% endif %}
+                    'json');
         });
     /* ]]> */
 </script>

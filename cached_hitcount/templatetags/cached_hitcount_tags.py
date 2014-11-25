@@ -2,6 +2,7 @@ from django import template
 from django.core.urlresolvers import reverse
 
 from cached_hitcount.utils import get_target_ctype_pk, get_hit_count as get_hit_count_utils
+from cached_hitcount.settings import CACHED_HITCOUNT_CLIENT_CALLBACKS
 
 register = template.Library()
 
@@ -42,9 +43,15 @@ def get_hit_count_javascript_template(context, object, **kwargs):
     url = reverse('update_hit_count_ajax')
     ctype, object_pk = get_target_ctype_pk(object)
     csrf_token = unicode(context['csrf_token'])
-    return {
+
+    template_context = {
         'ctype_pk': ctype.pk,
         'object_pk': object_pk,
         'csrf_token': csrf_token,
         'url' : url,
     }
+
+    if CACHED_HITCOUNT_CLIENT_CALLBACKS:
+        template_context['client_callbacks'] = CACHED_HITCOUNT_CLIENT_CALLBACKS
+
+    return template_context

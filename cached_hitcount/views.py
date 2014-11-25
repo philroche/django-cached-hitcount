@@ -5,7 +5,10 @@ from django.views.decorators.cache import never_cache
 
 from cached_hitcount.utils import get_ip, get_hitcount_cache, is_cached_hitcount_enabled, is_bot_request, using_memcache
 from cached_hitcount.models import BlacklistIP
-from cached_hitcount.settings import CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS, CACHED_HITCOUNT_EXCLUDE_BOTS, CACHED_HITCOUNT_LOCK_KEY
+from cached_hitcount.settings import CACHED_HITCOUNT_CACHE_TIMEOUT, CACHED_HITCOUNT_EXCLUDE_IP_ADDRESS, \
+    CACHED_HITCOUNT_EXCLUDE_BOTS, CACHED_HITCOUNT_LOCK_KEY, \
+    CACHED_HITCOUNT_SERVER_CALLBACKS
+
 from cached_hitcount.decorators import conditional_csrf_exempt
 
 def _update_hit_count(request, object_pk, ctype_pk):
@@ -52,6 +55,23 @@ def json_error_response(error_message):
     return HttpResponse(json.dumps(dict(success=False,
                                               error_message=error_message)))
 
+def call_custom_callbacks():
+    results = {}
+    #AttributeError
+    #ImportError
+    for custom_callback_key, custom_callback_module_method in CACHED_HITCOUNT_SERVER_CALLBACKS.iteritems():
+        custom_callback_module, custom_callback_method = custom_callback_module_method
+        try:
+            m = __import__(custom_callback_module, globals(), locals(), [custom_callback_method], -1)
+            func = getattr(m,custom_callback_method)
+            results[custom_callback_key] = func()
+        except AttributeError, ae:
+            results.setdefault('errors', []).append('%s has no method %s' % (custom_callback_module, custom_callback_method))
+        except ImportError, ie:
+            results.setdefault('errors', []).append('Unable to import %s' % custom_callback_module)
+
+    return results
+
 @never_cache
 @conditional_csrf_exempt
 def update_hit_count_ajax(request):
@@ -81,4 +101,8 @@ def update_hit_count_ajax(request):
         if result:
             status = "success"
 
-    return HttpResponse(json.dumps({'status': status}),mimetype="application/json")
+    result_dict = {'status': status}
+    if CACHED_HITCOUNT_SERVER_CALLBACKS:
+        result_dict.update(call_custom_callbacks())
+
+    return HttpResponse(json.dumps(result_dict),mimetype="application/json")

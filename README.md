@@ -27,6 +27,9 @@ Available settings are:
 * HITCOUNT_EXCLUDE_BOTS - Whether or not you exclude bots (default is True)
 * HITCOUNT_LOCK_KEY - key name to use for locking when persisting hits to DB
 * HITCOUNT_CSRF_EXEMPT - Whether or not ajax view is CSRF exempt by default. Useful if the pages you are using hitcount on are cached. (default is False)
+* HITCOUNT_SERVER_CALLBACKS - Dict with with value as tuple of module and method to call on server. (default is {})
+* HITCOUNT_CLIENT_CALLBACKS - List of Javascript functions to call when response is received. Response is passed to these functions. (default is [])
+
 
 Also a gargoyle switch `cached_hitcount` to switch on/off all hit counting (default is True)
 

@@ -125,3 +125,7 @@ LOGGING = {
 }
 
 HITCOUNT_CSRF_EXEMPT = False
+
+HITCOUNT_SERVER_CALLBACKS = {'app_state': ('hitcount_example.utils','example_custom_callback')}#Dict with with value as tuple of module and method to call on server. (default is {})
+HITCOUNT_CLIENT_CALLBACKS = ['append_custom_callback_text']#List of Javascript functions to call when response is received. Response is passed to these functions. (default is [])
+
