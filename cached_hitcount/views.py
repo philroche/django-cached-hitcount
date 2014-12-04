@@ -55,7 +55,7 @@ def json_error_response(error_message):
     return HttpResponse(json.dumps(dict(success=False,
                                               error_message=error_message)))
 
-def call_custom_callbacks():
+def call_custom_callbacks(request):
     results = {}
     #AttributeError
     #ImportError
@@ -64,7 +64,7 @@ def call_custom_callbacks():
         try:
             m = __import__(custom_callback_module, globals(), locals(), [custom_callback_method], -1)
             func = getattr(m,custom_callback_method)
-            results[custom_callback_key] = func()
+            results[custom_callback_key] = func(request)
         except AttributeError, ae:
             results.setdefault('errors', []).append('%s has no method %s' % (custom_callback_module, custom_callback_method))
         except ImportError, ie:
@@ -103,6 +103,6 @@ def update_hit_count_ajax(request):
 
     result_dict = {'status': status}
     if CACHED_HITCOUNT_SERVER_CALLBACKS:
-        result_dict.update(call_custom_callbacks())
+        result_dict.update(call_custom_callbacks(request))
 
     return HttpResponse(json.dumps(result_dict),mimetype="application/json")
