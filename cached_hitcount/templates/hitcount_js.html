@@ -3,7 +3,7 @@
         $(document).ready(function() {
             $.ajax({
                     type: 'POST',
-                    url: {{ url }}',
+                    url: '{{ url }}',
                     data: {object_pk: '{{ object_pk }}', ctype_pk: '{{ ctype_pk }}', csrfmiddlewaretoken: '{{ csrf_token }}'},
                     dataType: 'json'}).always(
                         {% if client_callbacks %}
